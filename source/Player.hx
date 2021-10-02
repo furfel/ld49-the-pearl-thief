@@ -35,18 +35,30 @@ class Player extends FlxSprite
 			facing = FlxObject.RIGHT;
 			velocity.set(PLAYER_SPEED, 0);
 			if (isUp())
+			{
 				velocity.rotate(FlxPoint.weak(0, 0), -45);
+				facing |= FlxObject.UP;
+			}
 			else if (isDown())
+			{
+				facing |= FlxObject.DOWN;
 				velocity.rotate(FlxPoint.weak(0, 0), 45);
+			}
 		}
 		else if (isLeft())
 		{
 			facing = FlxObject.LEFT;
 			velocity.set(PLAYER_SPEED, 0);
 			if (isUp())
+			{
+				facing |= FlxObject.UP;
 				velocity.rotate(FlxPoint.weak(0, 0), 225);
+			}
 			else if (isDown())
+			{
+				facing |= FlxObject.DOWN;
 				velocity.rotate(FlxPoint.weak(0, 0), 135);
+			}
 			else
 				velocity.rotate(FlxPoint.weak(0, 0), 180);
 		}
