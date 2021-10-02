@@ -7,8 +7,11 @@ import flixel.group.FlxSpriteGroup.FlxTypedSpriteGroup;
 class Noise extends FlxTypedSpriteGroup<FlxSprite>
 {
 	private var sprites:Array<FlxSprite> = [];
+	private var parent:PlayState;
 
-	public function new()
+	public static final ACTIVATION_TRESHOLD = 0.7;
+
+	public function new(parent:PlayState)
 	{
 		super(0, 0);
 		scrollFactor.set(0, 0);
@@ -20,6 +23,8 @@ class Noise extends FlxTypedSpriteGroup<FlxSprite>
 				sprites.push(tmp);
 				add(tmp);
 			}
+		this.parent = parent;
+		alpha = 0;
 	}
 
 	/**
@@ -27,21 +32,17 @@ class Noise extends FlxTypedSpriteGroup<FlxSprite>
 	**/
 	private var currentFrame:Int;
 
-	private var maxElapsed = 0.02;
-
 	override function update(elapsed:Float)
 	{
 		super.update(elapsed);
-		maxElapsed -= elapsed;
-		if (maxElapsed < 0)
+		currentFrame = (currentFrame + 1) % 7;
+		for (i in 0...sprites.length)
 		{
-			maxElapsed = 0.02;
-			currentFrame = (currentFrame + 1) % 7;
-			for (i in 0...sprites.length)
-			{
-				sprites[i].flipX = (currentFrame + i % 5) % 2 == 0;
-				sprites[i].flipY = (currentFrame + i % 3) == 1;
-			}
+			sprites[i].flipX = (currentFrame + i % 5) % 2 == 0;
+			sprites[i].flipY = (currentFrame + i % 3) == 1;
 		}
+
+		if (parent.getCurrentStability() <= ACTIVATION_TRESHOLD)
+			alpha = (ACTIVATION_TRESHOLD - parent.getCurrentStability()) / ACTIVATION_TRESHOLD;
 	}
 }
