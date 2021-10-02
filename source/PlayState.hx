@@ -3,11 +3,16 @@ package;
 import effects.Noise;
 import flixel.FlxG;
 import flixel.FlxState;
+import flixel.group.FlxSpriteGroup.FlxTypedSpriteGroup;
+import flixel.tile.FlxTilemap;
 import pearl.Pearl;
 
 class PlayState extends FlxState
 {
 	private var forest:Forest;
+	private var player:Player;
+	private var pearls:FlxTypedSpriteGroup<Pearl>;
+	private var trees:FlxTilemap;
 
 	override public function create()
 	{
@@ -15,14 +20,19 @@ class PlayState extends FlxState
 		FlxG.camera.antialiasing = true;
 		forest = new Forest();
 		this.bgColor = forest.getBgColor();
-		add(new Pearl(100, 100, 0xFFAAEE22));
-		add(new Pearl(200, 180, 0xFFFF2222));
-		add(new Pearl(180, 70, 0xFF99EEFF));
-		add(new Noise());
+		add(trees = forest.getTrees());
+		add(pearls = forest.getPearls());
+		add(player = forest.getPlayer());
+		add(forest.getTreetops());
+		FlxG.worldBounds.copyFrom(forest.getBounds());
+		camera.follow(player);
+		// add(new Noise());
 	}
 
 	override public function update(elapsed:Float)
 	{
 		super.update(elapsed);
+		FlxG.collide(player, trees);
+		FlxG.collide(player, pearls);
 	}
 }
