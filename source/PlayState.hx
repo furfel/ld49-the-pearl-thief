@@ -16,6 +16,7 @@ class PlayState extends FlxState
 	private var trees:FlxTilemap;
 	private var treetops:FlxTilemap;
 	private var kraken:Badguy;
+	private var bullets:FlxTypedSpriteGroup<Bullet>;
 
 	override public function create()
 	{
@@ -25,11 +26,14 @@ class PlayState extends FlxState
 		this.bgColor = forest.getBgColor();
 		add(trees = forest.getTrees());
 		add(pearls = forest.getPearls());
-		add(player = forest.getPlayer());
+		var shadow:BadguyShadow;
+		add(shadow = new BadguyShadow());
+		add(player = forest.getPlayer().setParent(this));
+		add(bullets = new FlxTypedSpriteGroup<Bullet>(0, 0, 10));
 		add(treetops = forest.getTreetops());
 		FlxG.worldBounds.copyFrom(forest.getBounds());
 		camera.follow(player);
-		add(kraken = new Badguy(pearls));
+		add(kraken = new Badguy(pearls, shadow));
 
 		add(new Indicator(player, kraken));
 
@@ -37,10 +41,6 @@ class PlayState extends FlxState
 
 		add(new Noise(this));
 		add(new effects.DesaturateItems(this));
-
-		#if FURFEL_DEBUG
-		camera.zoom = 0.75;
-		#end
 	}
 
 	override public function update(elapsed:Float)
@@ -48,6 +48,11 @@ class PlayState extends FlxState
 		super.update(elapsed);
 		FlxG.collide(player, trees);
 		FlxG.collide(player, pearls);
+		FlxG.overlap(kraken, bullets, (k, b) ->
+		{
+			cast(b, Bullet).kill();
+			kraken.interrupt();
+		});
 
 		if (stability > getTargetStability())
 			stability -= elapsed * .25;
@@ -60,4 +65,13 @@ class PlayState extends FlxState
 
 	private function getTargetStability():Float
 		return (1.0 * pearls.countLiving()) / (1.0 * pearls.length);
+
+	public function shoot(X:Float, Y:Float, angle:Float)
+	{
+		var av = bullets.getFirstAvailable();
+		if (av == null)
+			bullets.add(new Bullet(X, Y, angle));
+		else
+			av.reuse(X, Y, angle);
+	}
 }
