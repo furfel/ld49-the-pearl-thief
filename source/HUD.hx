@@ -13,7 +13,7 @@ class HUD extends FlxTypedSpriteGroup<FlxSprite>
 {
 	private var meter:StabilityMeter;
 	private var parent:PlayState;
-	private var debugText1:FlxText;
+	private var timer:Timer;
 
 	@:access(PlayState)
 	public function new(parent:PlayState)
@@ -23,8 +23,10 @@ class HUD extends FlxTypedSpriteGroup<FlxSprite>
 		add(meter = new StabilityMeter());
 		meter.scrollFactor.set(0, 0);
 		this.parent = parent;
-		add(debugText1 = new FlxText(20, 20, "Enemy angle = "));
+		add(timer = new Timer(32, FlxG.height - 32, 24));
 	}
+
+	private var elapsedEpoch = 0.0;
 
 	@:access(PlayState)
 	@:access(Badguy)
@@ -32,6 +34,7 @@ class HUD extends FlxTypedSpriteGroup<FlxSprite>
 	{
 		super.update(elapsed);
 		meter.setPercentage(parent.getCurrentStability());
-		debugText1.text = "Enemy angle = " + parent.kraken.angleAroundWorld + "";
+		elapsedEpoch += elapsed;
+		timer.setTime(elapsedEpoch);
 	}
 }
