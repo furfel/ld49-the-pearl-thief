@@ -11,7 +11,7 @@ import flixel.util.FlxSpriteUtil;
 
 class HUD extends FlxTypedSpriteGroup<FlxSprite>
 {
-	private var stabilityBar:FlxPieDial;
+	private var meter:StabilityMeter;
 	private var parent:PlayState;
 	private var debugText1:FlxText;
 
@@ -20,8 +20,8 @@ class HUD extends FlxTypedSpriteGroup<FlxSprite>
 	{
 		super(0, 0);
 		scrollFactor.set(0, 0);
-		add(stabilityBar = new FlxPieDial(FlxG.width - 64 - 64, 64, 32, FlxColor.PINK, 24, CIRCLE, 16));
-		stabilityBar.scrollFactor.set(0, 0);
+		add(meter = new StabilityMeter());
+		meter.scrollFactor.set(0, 0);
 		this.parent = parent;
 		add(debugText1 = new FlxText(20, 20, "Enemy angle = "));
 	}
@@ -31,7 +31,7 @@ class HUD extends FlxTypedSpriteGroup<FlxSprite>
 	override function update(elapsed:Float)
 	{
 		super.update(elapsed);
-		stabilityBar.amount = parent.getCurrentStability();
+		meter.setPercentage(parent.getCurrentStability());
 		debugText1.text = "Enemy angle = " + parent.kraken.angleAroundWorld + "";
 	}
 }

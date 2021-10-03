@@ -14,7 +14,7 @@ class StabilityMeter extends FlxTypedSpriteGroup<FlxSprite>
 
 	public function new()
 	{
-		super(FlxG.width / 2, 64);
+		super(FlxG.width / 2, FlxG.height - 70);
 		scrollFactor.set(0, 0);
 		add(new FlxSprite(0, 0, "assets/images/meter.png"));
 		add(arrow = new FlxSprite(64, 55, "assets/images/arrow.png"));
