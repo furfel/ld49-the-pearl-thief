@@ -17,8 +17,8 @@ class Badguy extends FlxSprite
 	public static final FLYING_AROUND_WAIT_MIN = 3.0;
 	public static final FLYING_AROUND_WAIT_MAX = 12.0;
 	public static final STATE_FLYING_FOR_PEARL = 1;
-	public static final TAKING_PEARL_WAIT_MIN = 2.0;
-	public static final TAKING_PEARL_WAIT_MAX = 3.5;
+	public static final TAKING_PEARL_WAIT_MIN = 0.8;
+	public static final TAKING_PEARL_WAIT_MAX = 1.2;
 	public static final STATE_TAKING_PEARL = 2;
 	public static final STATE_FLYING_AWAY = 3;
 
@@ -224,6 +224,7 @@ class Badguy extends FlxSprite
 			interrupted = true;
 			if (flyTween != null && flyTween.active)
 				flyTween.cancelChain();
+			flyAway();
 		}
 		cooldown = 2.5;
 	}
