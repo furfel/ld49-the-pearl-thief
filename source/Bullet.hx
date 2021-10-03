@@ -5,7 +5,7 @@ import flixel.math.FlxPoint;
 
 class Bullet extends FlxSprite
 {
-	public static final BULLET_SPEED = 200;
+	public static final BULLET_SPEED = 420;
 
 	public function new(X:Float, Y:Float, angle:Float)
 	{
@@ -19,7 +19,7 @@ class Bullet extends FlxSprite
 		reset(X - 8, Y - 8);
 		this.angle = angle;
 		this.velocity.set(BULLET_SPEED, 0).rotate(FlxPoint.weak(0, 0), angle);
-		this.health = 1.6;
+		this.health = 0.8;
 	}
 
 	override function update(elapsed:Float)
