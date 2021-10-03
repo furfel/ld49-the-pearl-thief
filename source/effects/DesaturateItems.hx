@@ -25,6 +25,7 @@ class DesaturateItems extends FlxBasic
 		sh.data.timeskew.value = [0.0];
 		this.parent.trees.shader = sh;
 		this.parent.treetops.shader = sh;
+		this.parent.decorations.shader = sh;
 	}
 
 	private var phase = 0.0;
