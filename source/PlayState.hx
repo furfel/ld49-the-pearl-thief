@@ -15,6 +15,7 @@ class PlayState extends FlxState
 	private var pearls:FlxTypedSpriteGroup<Pearl>;
 	private var trees:FlxTilemap;
 	private var treetops:FlxTilemap;
+	private var decorations:FlxTilemap;
 	private var kraken:Badguy;
 	private var bullets:FlxTypedSpriteGroup<Bullet>;
 
@@ -24,12 +25,13 @@ class PlayState extends FlxState
 		FlxG.camera.antialiasing = true;
 		forest = new Forest();
 		this.bgColor = forest.getBgColor();
+		add(decorations = forest.getDecor());
 		add(trees = forest.getTrees());
 		add(pearls = forest.getPearls());
 		var shadow:BadguyShadow;
 		add(shadow = new BadguyShadow());
 		add(player = forest.getPlayer().setParent(this));
-		add(bullets = new FlxTypedSpriteGroup<Bullet>(0, 0, 10));
+		add(bullets = new FlxTypedSpriteGroup<Bullet>(0, 0, 7));
 		add(treetops = forest.getTreetops());
 		FlxG.worldBounds.copyFrom(forest.getBounds());
 		camera.follow(player);
@@ -53,9 +55,13 @@ class PlayState extends FlxState
 			cast(b, Bullet).kill();
 			kraken.interrupt();
 		});
+		FlxG.collide(bullets, trees, (b, t) ->
+		{
+			cast(b, Bullet).kill();
+		});
 
 		if (stability > getTargetStability())
-			stability -= elapsed * .25;
+			stability -= elapsed * .125;
 	}
 
 	private var stability = 1.0;
