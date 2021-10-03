@@ -27,6 +27,7 @@ class BasicPanel extends FlxState
 		}
 		if (!switching && FlxG.keys.justPressed.ANY && nextPanel != null)
 		{
+			FlxG.sound.play("assets/sounds/ok.ogg");
 			switching = true;
 			camera.fade(0.18, () -> FlxG.switchState(Type.createInstance(nextPanel, [])));
 		}
