@@ -6,6 +6,7 @@ import flixel.group.FlxSpriteGroup.FlxTypedSpriteGroup;
 import flixel.math.FlxAngle;
 import flixel.math.FlxMath;
 import flixel.math.FlxPoint;
+import flixel.system.FlxSound;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
@@ -31,6 +32,8 @@ class Badguy extends FlxSprite
 	private var angleAroundWorld:Float;
 	private var radiusAroundWorld:Float;
 
+	private var hitSound:FlxSound;
+
 	public function new(pearls:FlxTypedSpriteGroup<pearl.Pearl>, shadow:BadguyShadow)
 	{
 		super(0, 0);
@@ -45,6 +48,8 @@ class Badguy extends FlxSprite
 		worldCentralPoint = new FlxPoint(FlxG.worldBounds.x + FlxG.worldBounds.width / 2, FlxG.worldBounds.y + FlxG.worldBounds.height / 2);
 		radiusAroundWorld = FlxG.worldBounds.height / 2;
 		angleAroundWorld = FlxG.random.float(0, 360.0);
+
+		hitSound = new FlxSound().loadEmbedded("assets/sounds/hit.ogg");
 	}
 
 	private var state = STATE_FLYING_AROUND;
@@ -216,12 +221,14 @@ class Badguy extends FlxSprite
 		{
 			alpha = 0.7;
 			interrupted = true;
+			hitSound.play();
 			flyAway();
 		}
 		else if (state == STATE_FLYING_FOR_PEARL)
 		{
 			alpha = 0.7;
 			interrupted = true;
+			hitSound.play();
 			if (flyTween != null && flyTween.active)
 				flyTween.cancelChain();
 			flyAway();

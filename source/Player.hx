@@ -4,6 +4,7 @@ import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxSprite;
 import flixel.math.FlxPoint;
+import flixel.system.FlxSound;
 import flixel.util.FlxColor;
 
 class Player extends FlxSprite
@@ -18,6 +19,8 @@ class Player extends FlxSprite
 		FlxObject.UP => 270,
 		FlxObject.UP | FlxObject.RIGHT => 315
 	];
+
+	private var spitSound:FlxSound;
 
 	public function new(X:Float, Y:Float)
 	{
@@ -41,6 +44,8 @@ class Player extends FlxSprite
 
 		setSize(20, 24);
 		offset.set(6, 8);
+
+		spitSound = new FlxSound().loadEmbedded("assets/sounds/spit.ogg");
 	}
 
 	private var parent:PlayState;
@@ -141,6 +146,9 @@ class Player extends FlxSprite
 		updateMovement();
 		setAnimationTo();
 		if (parent != null && FlxG.keys.justPressed.SPACE && FlxG.random.float(0.0, 1.0) / 1.5 < parent.getCurrentStability())
+		{
 			parent.shoot(getMidpoint().x, getMidpoint().y, ANGLES[facing] + getRandomRotationOffset() * 2);
+			spitSound.play(true);
+		}
 	}
 }

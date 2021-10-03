@@ -43,6 +43,8 @@ class PlayState extends FlxState
 
 		add(new Noise(this));
 		add(new effects.DesaturateItems(this));
+
+		FlxG.sound.playMusic("assets/sounds/kraken.ogg");
 	}
 
 	override public function update(elapsed:Float)
@@ -62,6 +64,16 @@ class PlayState extends FlxState
 
 		if (stability > getTargetStability())
 			stability -= elapsed * .125;
+
+		updateMusicVolume();
+	}
+
+	private function updateMusicVolume()
+	{
+		var d = kraken.getMidpoint().distanceTo(player.getMidpoint()) / 500.0;
+		if (d > 1.0)
+			d = 1.0;
+		FlxG.sound.music.volume = 0.5 + d * 0.5;
 	}
 
 	private var stability = 1.0;
