@@ -33,9 +33,9 @@ class DesaturateItems extends FlxBasic
 	override function update(elapsed:Float)
 	{
 		super.update(elapsed);
-		phase += elapsed;
-		if (phase > 6.5)
-			phase -= 6.5;
+		phase += elapsed * 6.0;
+		if (phase > 160.0)
+			phase -= 160.0;
 		if (parent.getCurrentStability() < ACTIVATION_TRESHOLD)
 		{
 			var level = 1.0 - (ACTIVATION_TRESHOLD - parent.getCurrentStability()) / ACTIVATION_TRESHOLD;
