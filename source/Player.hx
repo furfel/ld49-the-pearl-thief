@@ -140,7 +140,7 @@ class Player extends FlxSprite
 		super.update(elapsed);
 		updateMovement();
 		setAnimationTo();
-		if (parent != null && FlxG.keys.justPressed.SPACE && FlxG.random.float(0.0, 1.0) < parent.getCurrentStability())
+		if (parent != null && FlxG.keys.justPressed.SPACE && FlxG.random.float(0.0, 1.0) / 1.5 < parent.getCurrentStability())
 			parent.shoot(getMidpoint().x, getMidpoint().y, ANGLES[facing] + getRandomRotationOffset() * 2);
 	}
 }
