@@ -16,11 +16,17 @@ class Forest
 	private var pearls:FlxTypedSpriteGroup<pearl.Pearl> = new FlxTypedSpriteGroup<Pearl>();
 	private var player:Player;
 	private var bounds:FlxRect;
+	private var decor:FlxTilemap;
 
 	public function new()
 	{
 		tiled_map = new TiledMap("assets/data/forest.tmx");
 		var gid = tiled_map.getTileSet("trees").firstGID;
+		var d_gid = tiled_map.getTileSet("decor").firstGID;
+
+		var _decor = cast(tiled_map.getLayer("decor"), TiledTileLayer);
+		decor = new FlxTilemap();
+		decor.loadMapFromArray(_decor.tileArray, _decor.width, _decor.height, "assets/images/decor.png", 32, 32, OFF, d_gid, 1, 1);
 
 		var trees = cast(tiled_map.getLayer("trees"), TiledTileLayer);
 		treesTilemap = new FlxTilemap();
@@ -54,6 +60,9 @@ class Forest
 
 	public function getBounds():FlxRect
 		return bounds;
+
+	public function getDecor():FlxTilemap
+		return decor;
 
 	public function getBgColor():FlxColor
 		return tiled_map.backgroundColor;
