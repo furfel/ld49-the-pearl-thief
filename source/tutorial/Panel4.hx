@@ -17,14 +17,14 @@ class Panel4 extends BasicPanel
 	{
 		super.create();
 		var t:FlxText;
-		add(t = new FlxText(32, 32, "Protect stability of this land as long", 12));
+		add(t = new FlxText(32, 64, "Protect stability of this land as long", 12));
 		t.screenCenter(X);
-		add(t = new FlxText(32, 48, "as you can. The more unstable is the space-time", 12));
+		add(t = new FlxText(32, 80, "as you can. The more unstable is the space-time", 12));
 		t.screenCenter(X);
-		add(t = new FlxText(32, 64, "continuum, the harder it becomes to play.", 12));
+		add(t = new FlxText(32, 96, "continuum, the harder it becomes to play.", 12));
 		t.screenCenter(X);
 		var s:FlxSprite;
-		add(s = new FlxSprite(0, FlxG.height - 128, "assets/images/meter-tut2.png"));
+		add(s = new FlxSprite(0, FlxG.height - 192, "assets/images/meter-tut2.png"));
 		s.screenCenter(X);
 	}
 

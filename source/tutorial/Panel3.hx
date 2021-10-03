@@ -22,10 +22,11 @@ class Panel3 extends BasicPanel
 		t.screenCenter(X);
 		add(t = new FlxText(32, 64, "It's only low enough to be hit", 12));
 		t.screenCenter(X);
-		add(t = new FlxText(32, 72, "When reaching for the pearl.", 12));
+		add(t = new FlxText(32, 80, "When reaching for the pearl.", 12));
 		t.screenCenter(X);
 		createSpitExample();
 		add(new FlxSprite(128, FlxG.height - 128, "assets/images/player-tut2.png"));
+		createKrakenExample();
 	}
 
 	private function createSpitExample()
