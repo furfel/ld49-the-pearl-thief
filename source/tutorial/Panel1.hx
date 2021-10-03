@@ -23,6 +23,7 @@ class Panel1 extends BasicPanel
 		t.screenCenter(X);
 		createPlayerExample();
 		createPearlExample();
+		add(new FlxSprite(FlxG.width - 32, FlxG.height - 128, "assets/images/meter-tut.png"));
 	}
 
 	private function createPlayerExample()

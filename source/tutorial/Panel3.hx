@@ -23,8 +23,9 @@ class Panel3 extends BasicPanel
 		add(t = new FlxText(32, 64, "It's only low enough to be hit", 12));
 		t.screenCenter(X);
 		add(t = new FlxText(32, 72, "When reaching for the pearl.", 12));
+		t.screenCenter(X);
 		createSpitExample();
-		add(new FlxSprite(48, FlxG.height - 128, "assets/images/player-tut2.png"));
+		add(new FlxSprite(128, FlxG.height - 128, "assets/images/player-tut2.png"));
 	}
 
 	private function createSpitExample()
@@ -35,5 +36,14 @@ class Panel3 extends BasicPanel
 		s.animation.play("_");
 		add(s);
 		s.screenCenter(X);
+	}
+
+	private function createKrakenExample()
+	{
+		var s = new FlxSprite(FlxG.width - 64 - 128, FlxG.height - 128);
+		s.loadGraphic("assets/images/kraken-tut.png", true, 64, 64);
+		s.animation.add("_", [3, 4, 5, 4], 9);
+		s.animation.play("_");
+		add(s);
 	}
 }
