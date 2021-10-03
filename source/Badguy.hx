@@ -14,21 +14,11 @@ import pearl.Pearl;
 class Badguy extends FlxSprite
 {
 	public static final STATE_FLYING_AROUND = 0;
-	#if FURFEL_DEBUG
-	public static final FLYING_AROUND_WAIT_MIN = 1.0;
-	public static final FLYING_AROUND_WAIT_MAX = 2.0;
-	#else
 	public static final FLYING_AROUND_WAIT_MIN = 3.0;
 	public static final FLYING_AROUND_WAIT_MAX = 12.0;
-	#end
 	public static final STATE_FLYING_FOR_PEARL = 1;
-	#if FURFEL_DEBUG
-	public static final TAKING_PEARL_WAIT_MIN = 1.0;
-	public static final TAKING_PEARL_WAIT_MAX = 2.0;
-	#else
-	public static final TAKING_PEARL_WAIT_MIN = 3.0;
-	public static final TAKING_PEARL_WAIT_MAX = 6.0;
-	#end
+	public static final TAKING_PEARL_WAIT_MIN = 2.0;
+	public static final TAKING_PEARL_WAIT_MAX = 3.5;
 	public static final STATE_TAKING_PEARL = 2;
 	public static final STATE_FLYING_AWAY = 3;
 
@@ -36,11 +26,12 @@ class Badguy extends FlxSprite
 	private var targetPearl:Pearl;
 
 	private var pearls:FlxTypedSpriteGroup<pearl.Pearl>;
+	private var shadow:BadguyShadow;
 	private var worldCentralPoint:FlxPoint;
 	private var angleAroundWorld:Float;
 	private var radiusAroundWorld:Float;
 
-	public function new(pearls:FlxTypedSpriteGroup<pearl.Pearl>)
+	public function new(pearls:FlxTypedSpriteGroup<pearl.Pearl>, shadow:BadguyShadow)
 	{
 		super(0, 0);
 		loadGraphic("assets/images/kraken.png", true, 32, 32);
@@ -50,6 +41,7 @@ class Badguy extends FlxSprite
 		animation.add("up", [6, 7, 6, 8], 7);
 		animation.play("down");
 		this.pearls = pearls;
+		this.shadow = shadow;
 		worldCentralPoint = new FlxPoint(FlxG.worldBounds.x + FlxG.worldBounds.width / 2, FlxG.worldBounds.y + FlxG.worldBounds.height / 2);
 		radiusAroundWorld = FlxG.worldBounds.height / 2;
 		angleAroundWorld = FlxG.random.float(0, 360.0);
@@ -75,6 +67,13 @@ class Badguy extends FlxSprite
 			case STATE_FLYING_AROUND:
 				updateFlyaroundPosition(elapsed);
 		}
+
+		if (cooldown > 0.0)
+		{
+			cooldown -= elapsed;
+			if (cooldown <= 0.0)
+				alpha = 1;
+		}
 	}
 
 	private function updateState()
@@ -98,9 +97,12 @@ class Badguy extends FlxSprite
 		targetPearl = findNearestPearl();
 		var destination = targetPearl.getPearlMidpoint().add(-width / 2, -height / 2);
 		changeAnimation(destination.x, destination.y);
-		flyTween = FlxTween.linearMotion(this, this.x, this.y, destination.x, destination.y, 400, false, {
+		shadow.y = destination.y + 28;
+		shadow.x = destination.x;
+		flyTween = FlxTween.linearMotion(this, this.x, this.y, destination.x, destination.y, 540.0, false, {
 			ease: FlxEase.cubeIn,
-			onComplete: takePearl
+			onComplete: takePearl,
+			onUpdate: updateShadow
 		});
 	}
 
@@ -117,8 +119,21 @@ class Badguy extends FlxSprite
 
 	private function takePearl(t:FlxTween)
 	{
+		shadow.x = x;
 		waitTime = FlxG.random.float(TAKING_PEARL_WAIT_MIN, TAKING_PEARL_WAIT_MAX);
 		state = STATE_TAKING_PEARL;
+	}
+
+	private function updateShadow(t:FlxTween)
+	{
+		shadow.x = x;
+		shadow.alpha = t.percent;
+	}
+
+	private function updateShadow2(t:FlxTween)
+	{
+		shadow.x = x;
+		shadow.alpha = 1 - t.percent;
 	}
 
 	private function flyAway()
@@ -132,7 +147,11 @@ class Badguy extends FlxSprite
 		var x = FlxMath.fastCos(FlxAngle.TO_RAD * angleAroundWorld) * radiusAroundWorld + worldCentralPoint.x;
 		var y = FlxMath.fastSin(FlxAngle.TO_RAD * angleAroundWorld) * radiusAroundWorld + worldCentralPoint.y;
 		changeAnimation(x, y);
-		flyTween = FlxTween.linearMotion(this, this.x, this.y, x, y, 200.0, false, {ease: FlxEase.cubeIn, onComplete: flyAround});
+		flyTween = FlxTween.linearMotion(this, this.x, this.y, x, y, 200.0, false, {
+			ease: FlxEase.cubeIn,
+			onComplete: flyAround,
+			onUpdate: updateShadow2
+		});
 	}
 
 	/**
@@ -179,7 +198,7 @@ class Badguy extends FlxSprite
 
 	private function updateFlyaroundPosition(elasped:Float)
 	{
-		angleAroundWorld += flyaroundDirection * elasped * 40.0;
+		angleAroundWorld += flyaroundDirection * elasped * 20.0;
 		var _x = FlxMath.fastCos(FlxAngle.TO_RAD * angleAroundWorld) * radiusAroundWorld + worldCentralPoint.x;
 		var _y = FlxMath.fastSin(FlxAngle.TO_RAD * angleAroundWorld) * radiusAroundWorld + worldCentralPoint.y;
 		changeAnimation(_x, _y);
@@ -187,8 +206,25 @@ class Badguy extends FlxSprite
 		this.y = _y;
 	}
 
+	private var cooldown = 0.0;
+
 	public function interrupt()
 	{
-		interrupted = true;
+		if (cooldown > 0.0)
+			return;
+		if (state == STATE_TAKING_PEARL)
+		{
+			alpha = 0.7;
+			interrupted = true;
+			flyAway();
+		}
+		else if (state == STATE_FLYING_FOR_PEARL)
+		{
+			alpha = 0.7;
+			interrupted = true;
+			if (flyTween != null && flyTween.active)
+				flyTween.cancelChain();
+		}
+		cooldown = 2.5;
 	}
 }
