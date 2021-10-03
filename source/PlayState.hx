@@ -37,9 +37,8 @@ class PlayState extends FlxState
 		camera.follow(player);
 		add(kraken = new Badguy(pearls, shadow));
 
-		add(new Indicator(player, kraken));
-
 		add(new HUD(this));
+		add(new Indicator(player, kraken));
 
 		add(new Noise(this));
 		add(new effects.DesaturateItems(this));
@@ -92,4 +91,7 @@ class PlayState extends FlxState
 		else
 			av.reuse(X, Y, angle);
 	}
+
+	public function getHits():Int
+		return kraken.hits;
 }

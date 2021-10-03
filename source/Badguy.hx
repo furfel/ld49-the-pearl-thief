@@ -34,6 +34,8 @@ class Badguy extends FlxSprite
 
 	private var hitSound:FlxSound;
 
+	public var hits:Int = 0;
+
 	public function new(pearls:FlxTypedSpriteGroup<pearl.Pearl>, shadow:BadguyShadow)
 	{
 		super(0, 0);
@@ -222,6 +224,7 @@ class Badguy extends FlxSprite
 			alpha = 0.7;
 			interrupted = true;
 			hitSound.play();
+			hits++;
 			flyAway();
 		}
 		else if (state == STATE_FLYING_FOR_PEARL)
@@ -229,6 +232,7 @@ class Badguy extends FlxSprite
 			alpha = 0.7;
 			interrupted = true;
 			hitSound.play();
+			hits++;
 			if (flyTween != null && flyTween.active)
 				flyTween.cancelChain();
 			flyAway();
