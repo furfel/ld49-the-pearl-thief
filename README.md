@@ -2,6 +2,7 @@
 ## A Ludum Dare 49 Compo Entry
 ### Gameplay
 **Controls**: WASD Space
+
 Shoot Kraken that want to steal pearls and try to keep as long as possible.
 
 The more pearls are stolen, the less stable the gameplay becomes.
