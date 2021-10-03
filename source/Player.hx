@@ -30,7 +30,7 @@ class Player extends FlxSprite
 			var _n = _directions[_dir];
 			animation.add(_n, [0 + _d], 1);
 			animation.add(_n + "shoot", [1 + _d], 1, false);
-			animation.add(_n + "walk", [0 + _d, 2 + _d, 0 + _d, 3 + _d], 5);
+			animation.add(_n + "walk", [0 + _d, 2 + _d, 0 + _d, 3 + _d], 13);
 		}
 		for (_dir in ["down", "", "up"])
 			for (_n in ["", "shoot", "walk"])
@@ -67,7 +67,7 @@ class Player extends FlxSprite
 		animation.play(_name);
 	}
 
-	public static final PLAYER_SPEED = 450;
+	public static final PLAYER_SPEED = 380;
 
 	private static function isLeft():Bool
 		return FlxG.keys.pressed.A || (FlxG.gamepads.firstActive != null && FlxG.gamepads.firstActive.pressed.DPAD_LEFT);
@@ -89,13 +89,13 @@ class Player extends FlxSprite
 			velocity.set(PLAYER_SPEED, 0);
 			if (isUp())
 			{
-				velocity.rotate(FlxPoint.weak(0, 0), -45);
+				velocity.rotate(FlxPoint.weak(0, 0), -45 + getRandomRotationOffset());
 				facing |= FlxObject.UP;
 			}
 			else if (isDown())
 			{
 				facing |= FlxObject.DOWN;
-				velocity.rotate(FlxPoint.weak(0, 0), 45);
+				velocity.rotate(FlxPoint.weak(0, 0), 45 + getRandomRotationOffset());
 			}
 		}
 		else if (isLeft())
@@ -105,28 +105,34 @@ class Player extends FlxSprite
 			if (isUp())
 			{
 				facing |= FlxObject.UP;
-				velocity.rotate(FlxPoint.weak(0, 0), 225);
+				velocity.rotate(FlxPoint.weak(0, 0), 225 + getRandomRotationOffset());
 			}
 			else if (isDown())
 			{
 				facing |= FlxObject.DOWN;
-				velocity.rotate(FlxPoint.weak(0, 0), 135);
+				velocity.rotate(FlxPoint.weak(0, 0), 135 + getRandomRotationOffset());
 			}
 			else
-				velocity.rotate(FlxPoint.weak(0, 0), 180);
+				velocity.rotate(FlxPoint.weak(0, 0), 180 + getRandomRotationOffset());
 		}
 		else if (isUp())
 		{
 			facing = FlxObject.UP;
-			velocity.set(PLAYER_SPEED, 0).rotate(FlxPoint.weak(0, 0), 270);
+			velocity.set(PLAYER_SPEED, 0).rotate(FlxPoint.weak(0, 0), 270 + getRandomRotationOffset());
 		}
 		else if (isDown())
 		{
 			facing = FlxObject.DOWN;
-			velocity.set(PLAYER_SPEED, 0).rotate(FlxPoint.weak(0, 0), 90);
+			velocity.set(PLAYER_SPEED, 0).rotate(FlxPoint.weak(0, 0), 90 + getRandomRotationOffset());
 		}
 		else
 			velocity.set(0, 0);
+	}
+
+	private function getRandomRotationOffset():Float
+	{
+		var minmax = (1.0 - parent.getCurrentStability()) * 90;
+		return FlxG.random.float(-minmax, minmax);
 	}
 
 	override function update(elapsed:Float)
@@ -134,7 +140,7 @@ class Player extends FlxSprite
 		super.update(elapsed);
 		updateMovement();
 		setAnimationTo();
-		if (parent != null && FlxG.keys.justPressed.SPACE)
-			parent.shoot(getMidpoint().x, getMidpoint().y, ANGLES[facing]);
+		if (parent != null && FlxG.keys.justPressed.SPACE && FlxG.random.float(0.0, 1.0) < parent.getCurrentStability())
+			parent.shoot(getMidpoint().x, getMidpoint().y, ANGLES[facing] + getRandomRotationOffset() * 2);
 	}
 }
