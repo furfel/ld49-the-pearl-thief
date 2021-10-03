@@ -23,12 +23,12 @@ class BasicPanel extends FlxState
 		{
 			firstRun = false;
 			switching = true;
-			camera.fade(0.4, true, () -> switching = false);
+			camera.fade(0.15, true, () -> switching = false);
 		}
 		if (!switching && FlxG.keys.justPressed.ANY && nextPanel != null)
 		{
 			switching = true;
-			camera.fade(0.5, () -> FlxG.switchState(Type.createInstance(nextPanel, [])));
+			camera.fade(0.18, () -> FlxG.switchState(Type.createInstance(nextPanel, [])));
 		}
 	}
 }
