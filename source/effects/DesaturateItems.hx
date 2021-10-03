@@ -96,7 +96,7 @@ class FurfelMegaShader extends FlxGraphicsShader
     }
 		vec4 furfel_texture2D(sampler2D bitmap, vec2 coord)
 		{
-            float x_coord = clamp(coord.x - sin(coord.y * 18.0 + timeskew) * skew * 0.18, 0.0, 1.0);
+            float x_coord = clamp(coord.x - sin(coord.y * 18.0 + timeskew) * skew * 0.16, 0.0, 1.0);
             coord.x = x_coord;
 			vec4 color = flixel_texture2D(bitmap, coord);
             vec3 hsvcolor = rgb2hsv(color.rgb);

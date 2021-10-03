@@ -3,11 +3,13 @@ package effects;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.group.FlxSpriteGroup.FlxTypedSpriteGroup;
+import flixel.system.FlxSound;
 
 class Noise extends FlxTypedSpriteGroup<FlxSprite>
 {
 	private var sprites:Array<FlxSprite> = [];
 	private var parent:PlayState;
+	private var noiseSound:FlxSound;
 
 	public static final ACTIVATION_TRESHOLD = 0.7;
 
@@ -25,6 +27,8 @@ class Noise extends FlxTypedSpriteGroup<FlxSprite>
 			}
 		this.parent = parent;
 		alpha = 0;
+		noiseSound = new FlxSound().loadEmbedded("assets/sounds/noise.ogg");
+		noiseSound.volume = 0;
 	}
 
 	/**
@@ -43,6 +47,11 @@ class Noise extends FlxTypedSpriteGroup<FlxSprite>
 		}
 
 		if (parent.getCurrentStability() <= ACTIVATION_TRESHOLD)
+		{
+			if (!noiseSound.playing)
+				noiseSound.play();
+			noiseSound.volume = (ACTIVATION_TRESHOLD - parent.getCurrentStability()) / ACTIVATION_TRESHOLD;
 			alpha = (ACTIVATION_TRESHOLD - parent.getCurrentStability()) / ACTIVATION_TRESHOLD;
+		}
 	}
 }
